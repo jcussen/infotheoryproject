@@ -4,16 +4,26 @@ import pandas as pd
 import pickle
 import infotheory
 
+#%% read data and label using pandas etc.
+def read_data(filepath):
+    data=np.loadtxt(filepath)
+    df = pd.DataFrame(data=data, columns=['row_num', 'subcondition', 'time', 'pathway', 'step_firrate', 'postsynaptic_spks', 'ex_spks_total', 'in1_spks_total', 'in2_spks_total', 'ex_spks_stim', 'in1_spks_stim', 'in2_spks_stim'])
+    return df
+
 #%% filter functions for data and PID analysis
 
-def filter_data(dat, cond, pw, time):
-    output=dat[dat[:,1]==cond,:] # select condition k=1,2,3
-    output=output[output[:,2]==time,:] # select time point wt=0,1,2,5,10,20
-    output=output[output[:,3]==pw,:] # select pathway pw=1,9
+def filter_data(dat, cond, pw, time): # operates on pandas dataframe input!
+    output=dat[dat['subcondition']==cond] # select condition k=1,2,3
+    output=output[output['time']==time] # select time point wt=0,1,2,5,10,20
+    output=output[output['pathway']==pw] # select pathway pw=1,9
     return output
 
 def pid_cols(dat):
-    return dat[:, [5, 9, 10, 11]] #get cols for PID analysis
+    return dat[['postsynaptic_spks', 'ex_spks_stim', 'in1_spks_stim', 'in2_spks_stim']] #get cols for PID analysis
+
+def main_cols(dat):
+    return dat[['subcondition', 'time', 'pathway','postsynaptic_spks', 'ex_spks_stim', 'in1_spks_stim', 'in2_spks_stim']] #get cols for PID analysis
+
 
 #%% Define necessary PID functions using infotheory library
 rnd = lambda x: np.round(x, decimals=4)
@@ -81,3 +91,24 @@ def plot_pid(subplot_ind, data, u1, u2, r, sy, title, u3=None):
 
     plt.title(title, fontsize=10)
     plt.legend(bbox_to_anchor=[1.1, 1.1])
+
+#%% PID function to create complete PID dataframe on data input
+
+def full_PID_dataframe(data):
+    df = pd.DataFrame(
+        columns=['subcondition', 'pathway', 'time', 'total_mi', 'ex_un', 'in1_un', 'in2_un', 'redundancy', 'synergy']) #create empty dataframe
+    for k in [1,2,3]: # loop over conditions
+        for pw in [1, 9]: # loop over pathways
+            for t in [0,1,2,5,10,20]: # loop over time points
+                dat= pid_cols(filter_data(data, k, pw, t)).to_numpy()
+                mi, u1, u2, u3, r, sy = get_pid_4D(dat)
+                df = df.append({'subcondition': k,
+                                'pathway': pw,
+                                'time': t,
+                                'total_mi': mi,
+                                'ex_un': u1,
+                                'in1_un': u2,
+                                'in2_un': u3,
+                                'redundancy': r,
+                                'synergy': sy}, ignore_index=True)
+    return df

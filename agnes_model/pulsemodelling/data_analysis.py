@@ -7,30 +7,26 @@ from agnes_model.pulsemodelling.functions import *
 
 #%% Import output data from model/matlab
 
-full_path = '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/AgnesModel/matlab_analysis/bigdata/all.dat'
-data = np.loadtxt(full_path) # this works quite quickly!
+seed1path= '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/copyagnes/flexible_switch_new2/step_input/output/Hebbian_scaling/scal_all.dat'
+seed0path = '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/data/Hebb_scaling/scaling_seed0.dat'
+# data1 = np.loadtxt(full_path) # this works quite quickly!
+# data2 = np.loadtxt(path2) # this works quite quickly!
+
+#%% Fully read the data into pandas
+
+seed0=read_data(seed0path)
+seed1=read_data(seed1path)
+
 
 #%% Run PID analysis of data - This is the Hebbian scaling condition!!!
 
-data_201=pid_cols(filter_data(data, 2, 1, 0)) # subcondition k=1,2,3, time=0,1,2,5,10,20
+# data_201=pid_cols(filter_data(data, 2, 1, 0)) # subcondition k=1,2,3, time=0,1,2,5,10,20
 
-# create empty dataframe
-df = pd.DataFrame(columns=['subcondition', 'pathway', 'time', 'total_mi', 'ex_un', 'in1_un', 'in2_un', 'redundancy', 'synergy'])
+df0=full_PID_dataframe(seed0)
+df1=full_PID_dataframe(seed1)
 
-for k in [1,2,3]:
-    for pw in [1, 9]:
-        for t in [0,1,2,5,10,20]:
-            dat= pid_cols(filter_data(data, k, pw, t))
-            mi, u1, u2, u3, r, sy = get_pid_4D(dat)
-            df = df.append({'subcondition': k,
-                            'pathway': pw,
-                            'time': t,
-                            'total_mi': mi,
-                            'ex_un': u1,
-                            'in1_un': u2,
-                            'in2_un': u3,
-                            'redundancy': r,
-                            'synergy': sy}, ignore_index=True)
+
+# df2=full_PID_dataframe(data2)
 
 
 #%% Check the filtered data
