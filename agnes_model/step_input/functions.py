@@ -71,43 +71,43 @@ def get_pid_4D(data):
     s = it.synergy([0, 1, 2, 3])
     return rnd(mi), rnd(u1), rnd(u2), rnd(u3), rnd(r), rnd(s)
 
-def plot_pid(subplot_ind, data, u1, u2, r, sy, title, u3=None):
-    # plt.subplot(subplot_ind)
-    plt.scatter(
-        np.linspace(0, 1, len(data[:, 0])),
-        data[:, 0],
-        label="T - Target",
-        s=2,
-        alpha=0.7,
-    )
-    plt.scatter(
-        np.linspace(0, 1, len(data[:, 1])),
-        data[:, 1],
-        label="X - Source 1",
-        s=2,
-        alpha=0.7,
-    )
-    plt.scatter(
-        np.linspace(0, 1, len(data[:, 2])),
-        data[:, 2],
-        label="Y - Source 2",
-        s=2,
-        alpha=0.7,
-    )
-    if np.shape(data)[1] == 4:
-        plt.scatter(
-            np.linspace(0, 1, len(data[:, 3])),
-            data[:, 3],
-            label="Z - Source 3",
-            s=2,
-            alpha=0.7,
-        )
-        title = title + "\n[u_x,u_y, u_z]={}\n[r,sy]={}".format([u1, u2, u3], [r, sy])
-    else:
-        title = title + "\n[u_x,u_y]={}\n[r,sy]={}".format([u1, u2], [r, sy])
-
-    plt.title(title, fontsize=10)
-    plt.legend(bbox_to_anchor=[1.1, 1.1])
+# def plot_pid(subplot_ind, data, u1, u2, r, sy, title, u3=None):
+#     # plt.subplot(subplot_ind)
+#     plt.scatter(
+#         np.linspace(0, 1, len(data[:, 0])),
+#         data[:, 0],
+#         label="T - Target",
+#         s=2,
+#         alpha=0.7,
+#     )
+#     plt.scatter(
+#         np.linspace(0, 1, len(data[:, 1])),
+#         data[:, 1],
+#         label="X - Source 1",
+#         s=2,
+#         alpha=0.7,
+#     )
+#     plt.scatter(
+#         np.linspace(0, 1, len(data[:, 2])),
+#         data[:, 2],
+#         label="Y - Source 2",
+#         s=2,
+#         alpha=0.7,
+#     )
+#     if np.shape(data)[1] == 4:
+#         plt.scatter(
+#             np.linspace(0, 1, len(data[:, 3])),
+#             data[:, 3],
+#             label="Z - Source 3",
+#             s=2,
+#             alpha=0.7,
+#         )
+#         title = title + "\n[u_x,u_y, u_z]={}\n[r,sy]={}".format([u1, u2, u3], [r, sy])
+#     else:
+#         title = title + "\n[u_x,u_y]={}\n[r,sy]={}".format([u1, u2], [r, sy])
+#
+#     plt.title(title, fontsize=10)
+#     plt.legend(bbox_to_anchor=[1.1, 1.1])
 
 #%% PID function to create complete PID dataframe on data input
 
