@@ -19,7 +19,7 @@ hebb_scal_wts = np.loadtxt(hebb_scal_path)
 
 #%% Import output data from model/matlab
 def process_data(dat):
-    dat=dat[:, np.r_[0, 6]] # get final state of the weights
+    dat=dat[:, np.r_[0, 1]] # get final state of the weights
     ex=dat[0:3200, :]
     in1 = dat[3200:3600, :]
     in2 = dat[3600:4000, :]

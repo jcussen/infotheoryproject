@@ -4,16 +4,30 @@ import pandas as pd
 import pickle
 import infotheory
 from agnes_model.step_input.functions import *
-from agnes_model.step_input.parameters import *
+# from agnes_model.step_input.parameters import *
 
 #%% Import output data from model/matlab
 
-seed1path= '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/copyagnes/flexible_switch_new2/step_input/output/Hebbian_scaling/scal_all.dat'
-seed0path = '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/data/Hebb_scaling/scaling_seed0.dat'
-# data1 = np.loadtxt(full_path) # this works quite quickly!
-# data2 = np.loadtxt(path2) # this works quite quickly!
+file_path= '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/data/Hebb_scaling/step_input/832510732_10.dat'
 
-#%% Fully read the data into pandas
+#%% read the data into pandas
 
-seed0=read_data(seed0path)
-seed1=read_data(seed1path)
+data=read_data(file_path)
+
+#%% group by to create summary stats
+
+agg_dict={'step_firrate': ['mean','std'],
+          'postsynaptic_spks': ['mean','std'],
+         'ex_spks_total': ['mean','std'],
+         'in1_spks_total': ['mean','std'],
+         'in2_spks_total': ['mean','std'],
+         'ex_spks_stim': ['mean','std'],
+         'in1_spks_stim': ['mean','std'],
+         'in2_spks_stim': ['mean','std']}
+
+summary_stats=data.groupby(['subcondition', 'pathway', 'time']).mean()
+summary_stats=summary_stats.drop(columns='row_num')
+summary_stats=summary_stats.add_suffix('_mean')
+
+#%% join with other tables
+
