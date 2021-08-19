@@ -18,8 +18,8 @@ hebb_anti_wts = np.loadtxt(hebb_anti_path)
 hebb_scal_wts = np.loadtxt(hebb_scal_path)
 
 #%% Import output data from model/matlab
-def process_data(dat):
-    dat=dat[:, np.r_[0, 6]] # get final state of the weights
+def process_data(dat, time_point):
+    dat=dat[:, np.r_[0, time_point]] # get final state of the weights
     ex=dat[0:3200, :]
     in1 = dat[3200:3600, :]
     in2 = dat[3600:4000, :]
@@ -33,15 +33,26 @@ col_dic= {1:'orangered',
           2: 'darkblue',
           3: 'dodgerblue'}
 
-pop_dic= {1:'Excitatory pop.',
-          2: 'Inhibitory pop. 1',
-          3: 'Inhibitory pop. 2'}
+pop_dic= {1:'Excitatory Pop.',
+          2: 'Inhibitory Pop. 1',
+          3: 'Inhibitory Pop. 2'}
 
-title_dic= {1:'Hebbian control condition weight profile',
-          2: 'Hebbian and anti-Hebbian weight profile',
-          3: 'Hebbian and homeostatic scaling weight profile'}
+title_dic_bef= {1:'Hebbian Control Condition Weight Profiles Before Learning',
+          2: 'Hebbian and Anti-Hebbian Weight Profiles Before Learning',
+          3: 'Hebbian and Homeostatic Weight Profiles Before Learning'}
 
-def plot_data(ex,in1, in2, title):
+title_dic_aft= {1:'Hebbian Control Condition Weight Profiles After Learning',
+          2: 'Hebbian and Anti-Hebbian Weight Profiles After Learning',
+          3: 'Hebbian and Homeostatic Weight Profiles After Learning'}
+
+pathdict= {1:'/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/figures/learning/Hebb',
+          2: '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/figures/learning/anti',
+          3: '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/figures/learning/scal'}
+
+def save_fig(fig, path):
+    fig.savefig(path, bbox_inches="tight")
+
+def plot_data(ex,in1, in2, title, path):
     counter=1
     for pop in [ex, in1, in2]:
         # df=pd.DataFrame(data=pop)
@@ -49,19 +60,30 @@ def plot_data(ex,in1, in2, title):
         # output= pop.set_index(0).plot(title='Inhibitory Population 1 av weights by signal group')
         plt.scatter(pop[:,0], pop[:,1], c=col, s=4, label=pop_dic.get(counter))
         plt.ylim(bottom=0, top=2.5)
-        plt.xlabel('Signal group')
-        plt.ylabel('Weight value')
+        plt.xlabel('Signal Group')
+        plt.ylabel('Weight')
         counter+=1
     plt.legend()
     plt.title(title)
+    save_fig(plt, path)
     plt.show()
 
 
 
+ # Get before plots
+
 alldata=[hebb_hebb_wts, hebb_anti_wts, hebb_scal_wts]
 count=1
 for data in alldata:
-    ex,in1,in2= process_data(data)
-    plot_data(ex,in1,in2, title_dic.get(count))
+    ex,in1,in2= process_data(data, 1)
+    plot_data(ex,in1,in2, title_dic_bef.get(count), str(pathdict.get(count))+'/before')
     count+=1
 
+ # Get after plots
+
+alldata=[hebb_hebb_wts, hebb_anti_wts, hebb_scal_wts]
+count=1
+for data in alldata:
+    ex,in1,in2= process_data(data, 6)
+    plot_data(ex,in1,in2, title_dic_aft.get(count), str(pathdict.get(count))+'/after')
+    count+=1

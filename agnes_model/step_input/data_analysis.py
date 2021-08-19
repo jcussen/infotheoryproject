@@ -8,20 +8,20 @@ from agnes_model.step_input.parameters import *
 
 #%% Import output data from model/matlab
 
-seed1path= '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/copyagnes/flexible_switch_new2/step_input/output/Hebbian_scaling/scal_all.dat'
-seed0path = '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/data/Hebb_scaling/scaling_seed0.dat'
+# seed1path= '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/copyagnes/flexible_switch_new2/step_input/output/Hebbian_scaling/scal_all.dat'
+seed0path = '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/data/Hebb_scaling/step_input/395401317_10.dat'
 # data1 = np.loadtxt(full_path) # this works quite quickly!
 # data2 = np.loadtxt(path2) # this works quite quickly!
 
 #%% Fully read the data into pandas
 
 seed0=read_data(seed0path)
-seed1=read_data(seed1path)
+# seed1=read_data(seed1path)
 
 #%% Calculate actual firing rates for data
 
 seed0=get_firing_rates(seed0)
-seed1=get_firing_rates(seed1)
+# seed1=get_firing_rates(seed1)
 
 
 
@@ -30,7 +30,7 @@ seed1=get_firing_rates(seed1)
 # data_201=pid_cols(filter_data(data, 2, 1, 0)) # subcondition k=1,2,3, time=0,1,2,5,10,20
 
 df0=full_PID_dataframe(seed0)
-df1=full_PID_dataframe(seed1)
+# df1=full_PID_dataframe(seed1)
 
 
 # df2=full_PID_dataframe(data2)
@@ -38,7 +38,7 @@ df1=full_PID_dataframe(seed1)
 
 #%% Get the plot table
 
-plot_table=filter_condition(df1, 1, 1)
+plot_table=filter_condition(df0, 1, 1)
 
 #%% Plot the data!
 

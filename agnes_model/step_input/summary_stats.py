@@ -8,7 +8,7 @@ from agnes_model.step_input.functions import *
 
 #%% Import output data from model/matlab
 
-file_path= '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/data/Hebb_scaling/step_input/832510732_10.dat'
+file_path= '/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/data/Hebb_antiHebb/step_input/832510732_50.dat'
 
 #%% read the data into pandas
 

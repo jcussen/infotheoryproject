@@ -38,6 +38,12 @@ def filter_condition(dat, cond, pw): # operates on pandas dataframe input!
 def pid_cols(dat):
     return dat[['postsynaptic_spks', 'ex_spks_stim', 'in1_spks_stim', 'in2_spks_stim']] #get cols for PID analysis
 
+def pid_p1off_cols(dat):
+    return dat[['postsynaptic_spks', 'ex_spks_stim', 'in2_spks_stim']] #get cols for PID analysis
+
+def pid_p2off_cols(dat):
+    return dat[['postsynaptic_spks', 'ex_spks_stim', 'in1_spks_stim']] #get cols for PID analysis
+
 def main_cols(dat):
     return dat[['subcondition', 'time', 'pathway','postsynaptic_spks', 'ex_spks_stim', 'in1_spks_stim', 'in2_spks_stim']] #get cols for PID analysis
 
@@ -51,11 +57,12 @@ def get_pid_3D(data):
     it.set_equal_interval_binning([10] * dims, np.min(data, 0), np.max(data, 0))
     it.add_data(data)
     # PID-ing
+    mi = it.mutual_info([0, 1, 2])
     u1 = it.unique_info([0, 1, 2])
     u2 = it.unique_info([0, 2, 1])
     r = it.redundant_info([0, 1, 2])
     s = it.synergy([0, 1, 2])
-    return rnd(u1), rnd(u2), rnd(r), rnd(s)
+    return rnd(mi), rnd(u1), rnd(u2), rnd(r), rnd(s)
 
 def get_pid_4D(data):
     dims = np.shape(data)[1]
@@ -114,18 +121,54 @@ def get_pid_4D(data):
 def full_PID_dataframe(data):
     df = pd.DataFrame(
         columns=['subcondition', 'pathway', 'time', 'total_mi', 'ex_un', 'in1_un', 'in2_un', 'redundancy', 'synergy']) #create empty dataframe
-    for k in [1,2,3]: # loop over conditions
-        for pw in [1, 9]: # loop over pathways
-            for t in [0,1,2,5,10,20]: # loop over time points
-                dat= pid_cols(filter_data(data, k, pw, t)).to_numpy()
-                mi, u1, u2, u3, r, sy = get_pid_4D(dat)
-                df = df.append({'subcondition': k,
-                                'pathway': pw,
-                                'time': t,
-                                'total_mi': mi,
-                                'ex_un': u1,
-                                'in1_un': u2,
-                                'in2_un': u3,
-                                'redundancy': r,
-                                'synergy': sy}, ignore_index=True)
+    k =1 # both inhibitory populations are on
+    for pw in [1, 9]: # loop over pathways
+        for t in [0,1,2,5,10,20]: # loop over time points
+            dat= pid_cols(filter_data(data, k, pw, t)).to_numpy()
+            mi, u1, u2, u3, r, sy = get_pid_4D(dat)
+            df = df.append({'subcondition': k,
+                            'pathway': pw,
+                            'time': t,
+                            'total_mi': mi,
+                            'ex_un': u1,
+                            'in1_un': u2,
+                            'in2_un': u3,
+                            'redundancy': r,
+                            'synergy': sy}, ignore_index=True)
+    return df
+
+def p1off_PID_dataframe(data):
+    df = pd.DataFrame(
+        columns=['subcondition', 'pathway', 'time', 'total_mi', 'ex_un', 'in2_un', 'redundancy', 'synergy']) #create empty dataframe
+    k =2 # population 1 is off
+    for pw in [1, 9]: # loop over pathways
+        for t in [0,1,2,5,10,20]: # loop over time points
+            dat= pid_p1off_cols(filter_data(data, k, pw, t)).to_numpy()
+            mi, u1, u2, r, sy = get_pid_3D(dat)
+            df = df.append({'subcondition': k,
+                            'pathway': pw,
+                            'time': t,
+                            'total_mi': mi,
+                            'ex_un': u1,
+                            'in2_un': u2,
+                            'redundancy': r,
+                            'synergy': sy}, ignore_index=True)
+    return df
+
+def p2off_PID_dataframe(data):
+    df = pd.DataFrame(
+        columns=['subcondition', 'pathway', 'time', 'total_mi', 'ex_un', 'in2_un', 'redundancy', 'synergy']) #create empty dataframe
+    k =3 # population 2 is off
+    for pw in [1, 9]: # loop over pathways
+        for t in [0,1,2,5,10,20]: # loop over time points
+            dat= pid_p2off_cols(filter_data(data, k, pw, t)).to_numpy()
+            mi, u1, u2, r, sy = get_pid_3D(dat)
+            df = df.append({'subcondition': k,
+                            'pathway': pw,
+                            'time': t,
+                            'total_mi': mi,
+                            'ex_un': u1,
+                            'in2_un': u2,
+                            'redundancy': r,
+                            'synergy': sy}, ignore_index=True)
     return df
