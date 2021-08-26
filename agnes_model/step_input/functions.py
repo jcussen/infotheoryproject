@@ -44,6 +44,9 @@ def pid_p1off_cols(dat):
 def pid_p2off_cols(dat):
     return dat[['postsynaptic_spks', 'ex_spks_stim', 'in1_spks_stim']] #get cols for PID analysis
 
+def pid_inhib_cols(dat):
+    return dat[['postsynaptic_spks', 'in1_spks_stim', 'in2_spks_stim']] #get cols for PID analysis
+
 def main_cols(dat):
     return dat[['subcondition', 'time', 'pathway','postsynaptic_spks', 'ex_spks_stim', 'in1_spks_stim', 'in2_spks_stim']] #get cols for PID analysis
 
@@ -57,7 +60,7 @@ def get_pid_3D(data):
     it.set_equal_interval_binning([10] * dims, np.min(data, 0), np.max(data, 0))
     it.add_data(data)
     # PID-ing
-    mi = it.mutual_info([0, 1, 2])
+    mi = it.mutual_info([0, 1, 1])
     u1 = it.unique_info([0, 1, 2])
     u2 = it.unique_info([0, 2, 1])
     r = it.redundant_info([0, 1, 2])
@@ -70,10 +73,10 @@ def get_pid_4D(data):
     it.set_equal_interval_binning([10] * dims, np.min(data, 0), np.max(data, 0))
     it.add_data(data)
     # PID-ing
-    mi= it.mutual_info([0, 1, 2, 3])
+    mi= it.mutual_info([0, 1, 1, 1])
     u1 = it.unique_info([0, 1, 2, 3])
     u2 = it.unique_info([0, 2, 1, 3])
-    u3 = it.unique_info([0, 2, 3, 1])
+    u3 = it.unique_info([0, 2, 3, 1]) # the unique variable is where the 1 is!!!!
     r = it.redundant_info([0, 1, 2, 3])
     s = it.synergy([0, 1, 2, 3])
     return rnd(mi), rnd(u1), rnd(u2), rnd(u3), rnd(r), rnd(s)
@@ -135,6 +138,27 @@ def full_PID_dataframe(data):
                             'in2_un': u3,
                             'redundancy': r,
                             'synergy': sy}, ignore_index=True)
+    return df
+
+def PID_2way(data):
+    funcs=[pid_p1off_cols, pid_p2off_cols, pid_inhib_cols]
+    df = pd.DataFrame(
+        columns=['subcondition', 'pathway', 'combo', 'time','total_mi', 'un1', 'un2', 'redundancy', 'synergy']) #create empty dataframe
+    k =1 # both inhibitory populations are on
+    for pw in [1, 9]: # loop over pathways
+        for combo in [0,1,2]:
+            for t in [0,1,2,5,10,20]: # loop over time points
+                dat= funcs[combo](filter_data(data, k, pw, t)).to_numpy()
+                mi, u1, u2, r, sy = get_pid_3D(dat)
+                df = df.append({'subcondition': k,
+                                'pathway': pw,
+                                'combo': combo,
+                                'time': t,
+                                'total_mi': mi,
+                                'un1': u1,
+                                'un2': u2,
+                                'redundancy': r,
+                                'synergy': sy}, ignore_index=True)
     return df
 
 def p1off_PID_dataframe(data):

@@ -29,19 +29,19 @@ def plot_data(dat, output_folder_path):
     pop2=dat[:, np.r_[0,17:33]]
     pop1 = pd.DataFrame(data=pop1)
     pop2 = pd.DataFrame(data=pop2)
-    output1=pop1.set_index(0).plot(title='Inhibitory Population 1 Mean Synaptic Weights')
+    output1=pop1.set_index(0).plot()
     output1.set_xlabel('Time (mins)')
     output1.set_ylabel('Mean Weight')
     output1.legend(bbox_to_anchor=(1.0, 1.0), borderpad=0.5)
     output1.legend(title='Signal group', bbox_to_anchor=(1.0, 1.0), borderpad=0.5)
-    output1_path=str(output_folder_path)+'/pop1.png'
+    output1_path=str(output_folder_path)+'/new_pop1.png'
     output1.figure.savefig(output1_path, bbox_inches="tight")
     output1.figure.show()
-    output2=pop2.set_index(0).plot(title='Inhibitory Population 2 Mean Synaptic Weights')
+    output2=pop2.set_index(0).plot()
     output2.legend(title='Signal group',bbox_to_anchor=(1.0, 1.0), borderpad=0.5)
     output2.set_xlabel('Time (mins)')
     output2.set_ylabel('Mean Weight')
-    output2_path = str(output_folder_path)+'/pop2.png'
+    output2_path = str(output_folder_path)+'/new_pop2.png'
     output2.figure.savefig(output2_path, bbox_inches="tight")
     output2.figure.show()
 

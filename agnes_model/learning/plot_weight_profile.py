@@ -64,7 +64,7 @@ def plot_data(ex,in1, in2, title, path):
         plt.ylabel('Weight')
         counter+=1
     plt.legend()
-    plt.title(title)
+    # plt.title(title)
     save_fig(plt, path)
     plt.show()
 
@@ -76,7 +76,7 @@ alldata=[hebb_hebb_wts, hebb_anti_wts, hebb_scal_wts]
 count=1
 for data in alldata:
     ex,in1,in2= process_data(data, 1)
-    plot_data(ex,in1,in2, title_dic_bef.get(count), str(pathdict.get(count))+'/before')
+    plot_data(ex,in1,in2, title_dic_bef.get(count), str(pathdict.get(count))+'/new_before')
     count+=1
 
  # Get after plots
@@ -85,5 +85,5 @@ alldata=[hebb_hebb_wts, hebb_anti_wts, hebb_scal_wts]
 count=1
 for data in alldata:
     ex,in1,in2= process_data(data, 6)
-    plot_data(ex,in1,in2, title_dic_aft.get(count), str(pathdict.get(count))+'/after')
+    plot_data(ex,in1,in2, title_dic_aft.get(count), str(pathdict.get(count))+'/new_after')
     count+=1

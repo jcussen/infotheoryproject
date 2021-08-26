@@ -4,6 +4,7 @@ import pandas as pd
 import pickle
 import infotheory
 from agnes_model.step_input.functions import *
+from agnes_model.main_PID.PIDfuncs import PID_table, hebb_PID_table
 
 #%% Import output data from model/matlab
 
@@ -113,3 +114,22 @@ for table in PIDs_p2off:
     plot_PID_p2off(table, 1, cnt)
     plot_PID_p2off(table, 9, cnt)
     cnt += 1
+
+#%% Get shuffled data and test significance:
+
+def shuffle_data(data, sources, n_trials, n_conditions):
+    surr=data.copy()
+    for i in range(int(n_conditions)):
+        for source in sources:
+            pick_rows = np.array(list(range(n_trials))) + n_trials * i
+            shuffled_vals = np.random.permutation(surr[source][pick_rows])
+            surr[source][pick_rows]=shuffled_vals
+    return surr
+
+n_trials=50000
+total_trials=hebbData.shape[0] # total number of observations
+n_conditions=total_trials/n_trials # number of different experimental conditions
+sources=['ex_spks_stim', 'in1_spks_stim', 'in2_spks_stim']
+
+sur = shuffle_data(hebbData, sources, n_trials, n_conditions)
+surr_pid = full_PID_dataframe(sur)
