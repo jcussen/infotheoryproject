@@ -38,7 +38,7 @@ def shuffle_data(data, sources, n_trials, n_conditions):
 #%% test PID of shuffled data
 # shuff_hebb=shuffle_data(hebbData, ['ex_spks_stim', 'in1_spks_stim', 'in2_spks_stim'], 10000, hebbData.shape[0]/10000)
 
-n_dfs=1
+n_dfs=75
 surr_PIDs=[[],[],[]]
 n_obs=10000
 
@@ -54,7 +54,7 @@ for i in range(n_dfs):
     surr_PIDs[1].append(shuff_anti_PID)
     surr_PIDs[2].append(shuff_scal_PID)
 
-file_name = "/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/processed_data/surrogate/test_10000_surr_PIDs.pkl"
+file_name = "/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/processed_data/surrogate/75_10_surr_PIDs.pkl"
 
 open_file = open(file_name, "wb")
 pickle.dump(surr_PIDs, open_file)
