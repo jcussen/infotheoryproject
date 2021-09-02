@@ -70,7 +70,7 @@ for i in range(n_dfs):
     surr_PIDs[1].append(shuff_anti_PID)
     surr_PIDs[2].append(shuff_scal_PID)
 
-file_name = "/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/processed_data/surrogate/25_surr_PIDs.pkl"
+file_name = "/Users/JoeCussen/Documents/CCNSheff/Project/Modelling/infotheoryproject/agnes_model/processed_data/surrogate/25_50_surr_PIDs.pkl"
 
 open_file = open(file_name, "wb")
 pickle.dump(surr_PIDs, open_file)
@@ -110,6 +110,6 @@ print('seconds')
 #
 #%% check the pickle file that was created
 
-open_file = open(file_name, "rb")
-surrtest_PIDS = pickle.load(open_file)
-open_file.close()
+# open_file = open(file_name, "rb")
+# surrtest_PIDS = pickle.load(open_file)
+# open_file.close()
